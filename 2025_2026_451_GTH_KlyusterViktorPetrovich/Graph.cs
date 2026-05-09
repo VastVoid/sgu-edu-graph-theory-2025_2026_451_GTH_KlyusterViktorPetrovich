@@ -152,6 +152,18 @@ public class Graph
         return deg;
     }
 
+    public bool HasLoop(string vertex)
+    {
+        if (!HasVertex(vertex))
+            throw new InvalidOperationException($"Vertex {vertex} does not exist.");
+        return _adjacencyList[vertex].ContainsKey(vertex);
+    }
+
+    public List<string> GetVerticesWithLoops()
+    {
+        return _vertices.Where(HasLoop).ToList();
+    }
+
     public List<string> GetVerticesWithGreaterOutDegree(string vertex)
     {
         var targetDegree = OutDegree(vertex);

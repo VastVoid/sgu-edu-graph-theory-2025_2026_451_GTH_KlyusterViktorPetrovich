@@ -18,6 +18,7 @@ while (true)
     Console.WriteLine("  8. Print adjacency list");
     Console.WriteLine("  9. Print edge list");
     Console.WriteLine("  o. Degree comparison");
+    Console.WriteLine("  l. Print vertices with loops");
     Console.WriteLine("  d. Run demo");
     Console.WriteLine("  0. Exit");
     Console.Write("  Choose: ");
@@ -59,6 +60,10 @@ while (true)
             case "o":
             case "O":
                 OutDegreeComparison(graph);
+                break;
+            case "l":
+            case "L":
+                PrintVerticesWithLoops(graph);
                 break;
             case "d":
             case "D":
@@ -191,6 +196,24 @@ static void OutDegreeComparison(Graph graph)
         Console.WriteLine($"Vertices with greater {term}:");
         foreach (var v in greater)
             Console.WriteLine($"  {v} ({term}: {graph.OutDegree(v)})");
+    }
+}
+
+static void PrintVerticesWithLoops(Graph graph)
+{
+    var loops = graph.GetVerticesWithLoops();
+    if (loops.Count == 0)
+    {
+        Console.WriteLine("No vertices have loops.");
+    }
+    else
+    {
+        Console.WriteLine("Vertices with loops:");
+        foreach (var v in loops)
+        {
+            var w = graph.IsWeighted ? $" (weight: {graph.GetWeight(v, v)})" : "";
+            Console.WriteLine($"  {v}{w}");
+        }
     }
 }
 
