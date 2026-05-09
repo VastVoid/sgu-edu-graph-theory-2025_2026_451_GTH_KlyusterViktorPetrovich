@@ -111,6 +111,32 @@ public static class Demo
         var loadedFromFile = new Graph("test_output.txt");
         Console.WriteLine(loadedFromFile);
 
+        Console.WriteLine("\n=== Демонстрация сравнения степени вершин ===");
+        Console.WriteLine("Загружаем ориентированный граф из файла:");
+        var outDegGraph = new Graph("2025_2026_451_GTH_KlyusterViktorPetrovich/graphs/graph_directed_unweighted.txt");
+        Console.WriteLine(outDegGraph);
+
+        var term = outDegGraph.IsDirected ? "out-degree" : "degree";
+        foreach (var v in outDegGraph.Vertices)
+            Console.WriteLine($"  {term}({v}) = {outDegGraph.OutDegree(v)}");
+
+        Console.WriteLine($"\nВершины с {term} больше, чем у вершины '1':");
+        var greater = outDegGraph.GetVerticesWithGreaterOutDegree("1");
+        foreach (var v in greater)
+            Console.WriteLine($"  {v} ({term}: {outDegGraph.OutDegree(v)})");
+
+        Console.WriteLine("\nЗагружаем неориентированный граф из файла:");
+        var undirectedGraph = new Graph("2025_2026_451_GTH_KlyusterViktorPetrovich/graphs/graph_undirected_unweighted.txt");
+        Console.WriteLine(undirectedGraph);
+
+        foreach (var v in undirectedGraph.Vertices)
+            Console.WriteLine($"  degree({v}) = {undirectedGraph.OutDegree(v)}");
+
+        Console.WriteLine("\nВершины со степенью больше, чем у вершины 'F':");
+        var greaterUndir = undirectedGraph.GetVerticesWithGreaterOutDegree("F");
+        foreach (var v in greaterUndir)
+            Console.WriteLine($"  {v} (degree: {undirectedGraph.OutDegree(v)})");
+
         Console.WriteLine("=== Демонстрация завершена ===");
     }
 }

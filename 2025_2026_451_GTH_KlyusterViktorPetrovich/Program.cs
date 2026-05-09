@@ -17,6 +17,7 @@ while (true)
     Console.WriteLine("  7. Remove edge");
     Console.WriteLine("  8. Print adjacency list");
     Console.WriteLine("  9. Print edge list");
+    Console.WriteLine("  o. Degree comparison");
     Console.WriteLine("  d. Run demo");
     Console.WriteLine("  0. Exit");
     Console.Write("  Choose: ");
@@ -54,6 +55,10 @@ while (true)
                 break;
             case "9":
                 PrintEdgeList(graph);
+                break;
+            case "o":
+            case "O":
+                OutDegreeComparison(graph);
                 break;
             case "d":
             case "D":
@@ -164,6 +169,29 @@ static void RemoveEdge(Graph graph)
     if (string.IsNullOrEmpty(from) || string.IsNullOrEmpty(to)) return;
     graph.RemoveEdge(from, to);
     Console.WriteLine($"Edge '{from} -> {to}' removed.");
+}
+
+static void OutDegreeComparison(Graph graph)
+{
+    var term = graph.IsDirected ? "out-degree" : "degree";
+    Console.Write("Enter vertex: ");
+    var vertex = Console.ReadLine()?.Trim();
+    if (string.IsNullOrEmpty(vertex)) return;
+
+    var deg = graph.OutDegree(vertex);
+    Console.WriteLine($"{term} of '{vertex}': {deg}");
+
+    var greater = graph.GetVerticesWithGreaterOutDegree(vertex);
+    if (greater.Count == 0)
+    {
+        Console.WriteLine($"No vertices have greater {term}.");
+    }
+    else
+    {
+        Console.WriteLine($"Vertices with greater {term}:");
+        foreach (var v in greater)
+            Console.WriteLine($"  {v} ({term}: {graph.OutDegree(v)})");
+    }
 }
 
 static void PrintEdgeList(Graph graph)

@@ -138,6 +138,26 @@ public class Graph
         return _adjacencyList[from][to];
     }
 
+    public int OutDegree(string vertex)
+    {
+        if (!HasVertex(vertex))
+            throw new InvalidOperationException($"Vertex {vertex} does not exist.");
+
+        if (IsDirected)
+            return _adjacencyList[vertex].Count;
+
+        var deg = _adjacencyList[vertex].Count;
+        if (_adjacencyList[vertex].ContainsKey(vertex))
+            deg++;
+        return deg;
+    }
+
+    public List<string> GetVerticesWithGreaterOutDegree(string vertex)
+    {
+        var targetDegree = OutDegree(vertex);
+        return _vertices.Where(v => v != vertex && OutDegree(v) > targetDegree).ToList();
+    }
+
     public IReadOnlyDictionary<string, double?> GetNeighbors(string vertex)
     {
         if (!HasVertex(vertex))
