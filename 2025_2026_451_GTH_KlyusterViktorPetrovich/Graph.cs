@@ -152,6 +152,26 @@ public class Graph
         return deg;
     }
 
+    public bool IsIsolated(string vertex)
+    {
+        if (!HasVertex(vertex))
+            throw new InvalidOperationException($"Vertex {vertex} does not exist.");
+        return _adjacencyList[vertex].Count == 0 && _incomingEdges[vertex].Count == 0;
+    }
+
+    public List<string> GetIsolatedVertices()
+    {
+        return _vertices.Where(IsIsolated).ToList();
+    }
+
+    public Graph WithoutIsolatedVertices()
+    {
+        var result = new Graph(this);
+        foreach (var v in GetIsolatedVertices())
+            result.RemoveVertex(v);
+        return result;
+    }
+
     public bool HasLoop(string vertex)
     {
         if (!HasVertex(vertex))

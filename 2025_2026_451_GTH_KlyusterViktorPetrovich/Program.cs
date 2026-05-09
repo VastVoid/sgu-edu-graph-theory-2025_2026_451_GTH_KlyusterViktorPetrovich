@@ -19,6 +19,7 @@ while (true)
     Console.WriteLine("  9. Print edge list");
     Console.WriteLine("  o. Degree comparison");
     Console.WriteLine("  l. Print vertices with loops");
+    Console.WriteLine("  i. Remove isolated vertices (build new graph)");
     Console.WriteLine("  d. Run demo");
     Console.WriteLine("  0. Exit");
     Console.Write("  Choose: ");
@@ -64,6 +65,12 @@ while (true)
             case "l":
             case "L":
                 PrintVerticesWithLoops(graph);
+                break;
+            case "i":
+            case "I":
+                graph = graph.WithoutIsolatedVertices();
+                Console.WriteLine("Isolated vertices removed. New graph:");
+                Console.WriteLine(graph);
                 break;
             case "d":
             case "D":
