@@ -143,6 +143,16 @@ public static class Demo
         var sccCount = sccGraph.CountSCC_BFS();
         Console.WriteLine($"Number of strongly connected components (BFS): {sccCount}");
 
+        Console.WriteLine("\n=== Задание: Boruvka MST ===");
+        var mstGraph = new Graph("2025_2026_451_GTH_KlyusterViktorPetrovich/graphs/graph_undirected_weighted.txt");
+        Console.WriteLine("Original:");
+        Console.WriteLine(mstGraph);
+        var mst = mstGraph.BoruvkaMST();
+        Console.WriteLine("Boruvka MST:");
+        Console.WriteLine(mst);
+        var mstWeight = mst.GetEdgeList().Sum(e => e.weight ?? 0);
+        Console.WriteLine($"Total MST weight: {mstWeight}");
+
         Console.WriteLine("\n=== Task II 1.19: Check: Make tree with removing 1 vetrex (DFS) ===");
         var treeGraph = new Graph("2025_2026_451_GTH_KlyusterViktorPetrovich/graphs/graph_remove_vertex_tree_demo.txt");
         Console.WriteLine(treeGraph);

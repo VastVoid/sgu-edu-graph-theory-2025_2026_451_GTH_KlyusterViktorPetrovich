@@ -22,6 +22,7 @@ while (true)
     Console.WriteLine("  i. Remove isolated vertices (build new graph)");
     Console.WriteLine("  s. Count SCC (BFS)");
     Console.WriteLine("  t. Find vertex to remove to get tree (DFS)");
+    Console.WriteLine("  m. Boruvka MST");
     Console.WriteLine("  d. Run demo");
     Console.WriteLine("  0. Exit");
     Console.Write("  Choose: ");
@@ -101,6 +102,20 @@ while (true)
                         Console.WriteLine("No vertex can be removed to obtain a tree.");
                     else
                         Console.WriteLine($"Remove vertex '{result}' to obtain a tree.");
+                }
+                break;
+            case "m":
+            case "M":
+                Console.WriteLine();
+                if (!graph.IsWeighted)
+                    Console.WriteLine("MST requires a weighted graph.");
+                else if (graph.IsDirected)
+                    Console.WriteLine("MST is defined for undirected graphs.");
+                else
+                {
+                    var mst = graph.BoruvkaMST();
+                    Console.WriteLine("Minimum spanning tree (Borůvka):");
+                    Console.WriteLine(mst);
                 }
                 break;
             case "d":

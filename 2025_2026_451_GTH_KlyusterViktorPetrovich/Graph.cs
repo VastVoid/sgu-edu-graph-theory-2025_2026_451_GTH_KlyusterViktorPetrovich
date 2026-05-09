@@ -439,6 +439,103 @@ public class Graph
         return visited;
     }
 
+    public Graph BoruvkaMST()
+    {
+        if (IsDirected)
+            throw new InvalidOperationException("MST is defined for undirected graphs.");
+        if (!IsWeighted)
+            throw new InvalidOperationException("MST requires a weighted graph.");
+
+        var parent = new Dictionary<string, string>();
+        var rank = new Dictionary<string, int>();
+
+        foreach (var v in _vertices)
+        {
+            parent[v] = v;
+            rank[v] = 0;
+        }
+
+        string Find(string x)
+        {
+            if (parent[x] != x)
+                parent[x] = Find(parent[x]);
+            return parent[x];
+        }
+
+        void Union(string x, string y)
+        {
+            var rx = Find(x);
+            var ry = Find(y);
+            if (rx == ry) return;
+            if (rank[rx] < rank[ry])
+                parent[rx] = ry;
+            else if (rank[rx] > rank[ry])
+                parent[ry] = rx;
+            else
+            {
+                parent[ry] = rx;
+                rank[rx]++;
+            }
+        }
+
+        var allEdges = new List<(string from, string to, double weight)>();
+        foreach (var (from, neighbors) in _adjacencyList)
+        {
+            foreach (var (to, w) in neighbors)
+            {
+                if (w == null) continue;
+                if (string.Compare(from, to, StringComparison.Ordinal) < 0)
+                    allEdges.Add((from, to, w.Value));
+            }
+        }
+
+        var mstEdges = new List<(string from, string to, double weight)>();
+        var components = _vertices.Count;
+
+        while (components > 1)
+        {
+            var cheapest = new Dictionary<string, (string from, string to, double weight)>();
+            foreach (var v in _vertices)
+                cheapest[v] = (null!, null!, double.MaxValue);
+
+            foreach (var (from, to, weight) in allEdges)
+            {
+                var rootFrom = Find(from);
+                var rootTo = Find(to);
+                if (rootFrom == rootTo) continue;
+
+                if (weight < cheapest[rootFrom].weight)
+                    cheapest[rootFrom] = (from, to, weight);
+                if (weight < cheapest[rootTo].weight)
+                    cheapest[rootTo] = (from, to, weight);
+            }
+
+            var added = false;
+            foreach (var v in _vertices)
+            {
+                var (from, to, weight) = cheapest[v];
+                if (from == null || weight == double.MaxValue) continue;
+                if (Find(from) != Find(to))
+                {
+                    Union(from, to);
+                    mstEdges.Add((from, to, weight));
+                    components--;
+                    added = true;
+                }
+            }
+
+            if (!added) break;
+        }
+
+        var result = new Graph(false, true);
+        foreach (var v in _vertices)
+            result.AddVertex(v);
+        foreach (var (from, to, weight) in mstEdges)
+            result.AddEdge(from, to, weight);
+
+        return result;
+    }
+
     public string? FindVertexToRemoveToGetTree_DFS()
     {
         if (IsDirected)
