@@ -137,6 +137,21 @@ public static class Demo
         foreach (var v in greaterUndir)
             Console.WriteLine($"  {v} (degree: {undirectedGraph.OutDegree(v)})");
 
+        Console.WriteLine("\n=== Task II 1.13: SCC (BFS) ===");
+        var sccGraph = new Graph("2025_2026_451_GTH_KlyusterViktorPetrovich/graphs/graph_scc_demo.txt");
+        Console.WriteLine(sccGraph);
+        var sccCount = sccGraph.CountSCC_BFS();
+        Console.WriteLine($"Number of strongly connected components (BFS): {sccCount}");
+
+        Console.WriteLine("\n=== Task II 1.19: Check: Make tree with removing 1 vetrex (DFS) ===");
+        var treeGraph = new Graph("2025_2026_451_GTH_KlyusterViktorPetrovich/graphs/graph_remove_vertex_tree_demo.txt");
+        Console.WriteLine(treeGraph);
+        var candidate = treeGraph.FindVertexToRemoveToGetTree_DFS();
+        if (candidate != null)
+            Console.WriteLine($"Remove vertex '{candidate}' to obtain a tree.");
+        else
+            Console.WriteLine("No such vertex.");
+
         Console.WriteLine("=== Демонстрация завершена ===");
     }
 }

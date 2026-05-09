@@ -394,6 +394,98 @@ public class Graph
         }
     }
 
+    public int CountSCC_BFS()
+    {
+        if (!IsDirected)
+            throw new InvalidOperationException("SCC is only defined for directed graphs.");
+
+        var assigned = new HashSet<string>();
+        var count = 0;
+
+        foreach (var v in _vertices)
+        {
+            if (assigned.Contains(v)) continue;
+
+            var forward = BFSReachable(v, _adjacencyList);
+            var backward = BFSReachable(v, _incomingEdges);
+            var component = forward.Intersect(backward).ToHashSet();
+
+            foreach (var u in component)
+                assigned.Add(u);
+
+            count++;
+        }
+
+        return count;
+    }
+
+    private HashSet<string> BFSReachable(string start,
+        Dictionary<string, Dictionary<string, double?>> graph)
+    {
+        var visited = new HashSet<string> { start };
+        var queue = new Queue<string>();
+        queue.Enqueue(start);
+
+        while (queue.Count > 0)
+        {
+            var v = queue.Dequeue();
+            foreach (var neighbor in graph[v].Keys)
+            {
+                if (visited.Add(neighbor))
+                    queue.Enqueue(neighbor);
+            }
+        }
+
+        return visited;
+    }
+
+    public string? FindVertexToRemoveToGetTree_DFS()
+    {
+        if (IsDirected)
+            throw new InvalidOperationException("This operation is defined for undirected graphs.");
+
+        foreach (var candidate in _vertices)
+        {
+            var remaining = _vertices.Where(v => v != candidate).ToHashSet();
+            if (remaining.Count == 0) continue;
+
+            var edgeCount = 0;
+            foreach (var (from, neighbors) in _adjacencyList)
+            {
+                if (from == candidate) continue;
+                foreach (var to in neighbors.Keys)
+                {
+                    if (to == candidate) continue;
+                    if (string.Compare(from, to, StringComparison.Ordinal) < 0)
+                        edgeCount++;
+                }
+            }
+
+            if (edgeCount != remaining.Count - 1) continue;
+
+            var start = remaining.First();
+            var visited = new HashSet<string> { start };
+            var stack = new Stack<string>();
+            stack.Push(start);
+
+            while (stack.Count > 0)
+            {
+                var v = stack.Pop();
+                foreach (var neighbor in _adjacencyList[v].Keys)
+                {
+                    if (neighbor == candidate) continue;
+                    if (visited.Add(neighbor))
+                        stack.Push(neighbor);
+                }
+            }
+
+            if (visited.Count == remaining.Count)
+                return candidate;
+        }
+
+        return null;
+    }
+
     public override string ToString()
     {
         var result = new System.Text.StringBuilder();

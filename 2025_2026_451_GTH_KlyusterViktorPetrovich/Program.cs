@@ -20,6 +20,8 @@ while (true)
     Console.WriteLine("  o. Degree comparison");
     Console.WriteLine("  l. Print vertices with loops");
     Console.WriteLine("  i. Remove isolated vertices (build new graph)");
+    Console.WriteLine("  s. Count SCC (BFS)");
+    Console.WriteLine("  t. Find vertex to remove to get tree (DFS)");
     Console.WriteLine("  d. Run demo");
     Console.WriteLine("  0. Exit");
     Console.Write("  Choose: ");
@@ -71,6 +73,35 @@ while (true)
                 graph = graph.WithoutIsolatedVertices();
                 Console.WriteLine("Isolated vertices removed. New graph:");
                 Console.WriteLine(graph);
+                break;
+            case "s":
+            case "S":
+                Console.WriteLine();
+                if (!graph.IsDirected)
+                {
+                    Console.WriteLine("SCC is only defined for directed graphs.");
+                }
+                else
+                {
+                    var sccCount = graph.CountSCC_BFS();
+                    Console.WriteLine($"Number of strongly connected components (BFS): {sccCount}");
+                }
+                break;
+            case "t":
+            case "T":
+                Console.WriteLine();
+                if (graph.IsDirected)
+                {
+                    Console.WriteLine("This operation is defined for undirected graphs.");
+                }
+                else
+                {
+                    var result = graph.FindVertexToRemoveToGetTree_DFS();
+                    if (result == null)
+                        Console.WriteLine("No vertex can be removed to obtain a tree.");
+                    else
+                        Console.WriteLine($"Remove vertex '{result}' to obtain a tree.");
+                }
                 break;
             case "d":
             case "D":
