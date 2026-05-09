@@ -1,0 +1,116 @@
+using _2025_2026_451_GTH_KlyusterViktorPetrovich;
+
+public static class Demo
+{
+    public static void Run()
+    {
+        Console.WriteLine("=== Демонстрация класса Graph ===\n");
+
+        Console.WriteLine("1. Конструктор по умолчанию (пустой неориентированный невзвешенный граф)");
+        var defaultGraph = new Graph();
+        Console.WriteLine(defaultGraph);
+        Console.WriteLine();
+
+        Console.WriteLine("2. Конструктор с параметрами (ориентированный взвешенный)");
+        var directedWeighted = new Graph(true, true);
+        directedWeighted.AddVertex("A");
+        directedWeighted.AddVertex("B");
+        directedWeighted.AddVertex("C");
+        directedWeighted.AddVertex("D");
+        directedWeighted.AddEdge("A", "B", 1.5);
+        directedWeighted.AddEdge("B", "C", 2.0);
+        directedWeighted.AddEdge("C", "D", 3.0);
+        directedWeighted.AddEdge("D", "A", 0.5);
+        directedWeighted.AddEdge("A", "C", 1.0);
+        Console.WriteLine(directedWeighted);
+        Console.WriteLine();
+
+        Console.WriteLine("3. Конструктор-копия");
+        var copyGraph = new Graph(directedWeighted);
+        Console.WriteLine("Копия исходного графа (с удалением вершины B):");
+        copyGraph.RemoveVertex("B");
+        Console.WriteLine(copyGraph);
+        Console.WriteLine("Исходный граф не изменился:");
+        Console.WriteLine(directedWeighted);
+        Console.WriteLine();
+
+        Console.WriteLine("4. Конструктор из файла (graph_directed_weighted.txt)");
+        var fileGraph = new Graph("2025_2026_451_GTH_KlyusterViktorPetrovich/graphs/graph_directed_weighted.txt");
+        Console.WriteLine(fileGraph);
+        Console.WriteLine();
+
+        Console.WriteLine("5. Фабричные методы для удобства тестирования");
+        var testGraph = Graph.CreateUndirectedUnweighted(
+            new[] { "X", "Y", "Z" },
+            new[] { ("X", "Y"), ("Y", "Z"), ("X", "Z") }
+        );
+        Console.WriteLine(testGraph);
+        Console.WriteLine();
+
+        Console.WriteLine("=== Демонстрация методов ===");
+        Console.WriteLine();
+
+        Console.WriteLine("Создаём пустой неориентированный невзвешенный граф:");
+        var g = new Graph(false, false);
+
+        Console.WriteLine("Добавляем вершины: v1, v2, v3, v4, v5");
+        g.AddVertex("v1");
+        g.AddVertex("v2");
+        g.AddVertex("v3");
+        g.AddVertex("v4");
+        g.AddVertex("v5");
+
+        Console.WriteLine("Добавляем рёбра: v1-v2, v2-v3, v3-v4, v1-v4, v4-v4 (петля)");
+        g.AddEdge("v1", "v2");
+        g.AddEdge("v2", "v3");
+        g.AddEdge("v3", "v4");
+        g.AddEdge("v1", "v4");
+        g.AddEdge("v4", "v4");
+
+        Console.WriteLine(g);
+
+        Console.WriteLine($"Существует ли вершина v3? {g.HasVertex("v3")}");
+        Console.WriteLine($"Существует ли ребро v1-v2? {g.HasEdge("v1", "v2")}");
+
+        Console.WriteLine("\nСписок рёбер:");
+        foreach (var (from, to, weight) in g.GetEdgeList())
+            Console.WriteLine($"  {from} - {to}");
+
+        Console.WriteLine("\nУдаляем ребро v1-v2");
+        g.RemoveEdge("v1", "v2");
+        Console.WriteLine(g);
+
+        Console.WriteLine("Удаляем вершину v3");
+        g.RemoveVertex("v3");
+        Console.WriteLine(g);
+
+        Console.WriteLine("Пытаемся удалить несуществующую вершину:");
+        try
+        {
+            g.RemoveVertex("v999");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"  Ошибка: {ex.Message}");
+        }
+
+        Console.WriteLine("\nПытаемся добавить существующее ребро:");
+        try
+        {
+            g.AddEdge("v1", "v4");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"  Ошибка: {ex.Message}");
+        }
+
+        Console.WriteLine("\n=== Сохранение и загрузка ===");
+        Console.WriteLine("Сохраняем граф в файл 'test_output.txt'");
+        g.SaveToFile("test_output.txt");
+        Console.WriteLine("Файл сохранён. Загружаем его обратно:");
+        var loadedFromFile = new Graph("test_output.txt");
+        Console.WriteLine(loadedFromFile);
+
+        Console.WriteLine("=== Демонстрация завершена ===");
+    }
+}
